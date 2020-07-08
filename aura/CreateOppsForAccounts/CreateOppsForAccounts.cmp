@@ -1,0 +1,46 @@
+<aura:component controller="LightningComponentController" implements="force:appHostable,flexipage:availableForAllPageTypes">
+    <aura:attribute name="accountToCreateOpps" type="List" default="[]" />
+    <aura:attribute name="fieldsMetadata" type="List" default="[{label: 'Name', fieldName: 'Name', type: 'text'}]" />
+    <aura:attribute name="allAccounts" type="List" default="[]" />
+    <aura:attribute name="isProcessing" type="Boolean" access="PRIVATE" default="false" />
+    <aura:attribute name="record" type="Map" default="{}" />
+    <aura:if isTrue="{!v.isProcessing }">
+        <lightning:spinner alternativeText="Loading" />
+    </aura:if>
+    <lightning:card title="Create Opportunity Page">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12 slds-medium-size_6-of-12 slds-small-size_12-of-12 slds-p-around_small">
+                <lightning:input aura:id="inputFieldOpp" type="currency" name="fieldAmount" label="Amount" value="{!v.record.Amount}" required="true" class="" />
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12 slds-medium-size_6-of-12 slds-small-size_12-of-12 slds-p-around_small">
+                <lightning:select aura:id="inputFieldOpp" name="fieldStageName" label="Stage" required="true" class="" value="{!v.record.StageName}">
+                    <option value="Prospecting">Prospecting</option>
+                    <option value="Qualification">Qualification</option>
+                    <option value="Needs Analysis">Needs Analysis</option>
+                    <option value="Value Proposition">Value Proposition</option>
+                    <option value="Id. Decision Makers">Id. Decision Makers</option>
+                    <option value="Perception Analysis">Perception Analysis</option>
+                    <option value="Proposal/Price Quote">Proposal/Price Quote</option>
+                    <option value="Negotiation/Review">Negotiation/Review</option>
+                    <option value="Closed Won">Closed Won</option>
+                    <option value="Closed Lost">Closed Lost</option>
+                </lightning:select>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12 slds-medium-size_6-of-12 slds-small-size_12-of-12 slds-p-around_small">
+                <lightning:input aura:id="inputFieldOpp" type="date" name="fieldCloseDate" label="Close Date" value="{!v.record.CloseDate}" required="true" class="" />
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-p-around_small">
+                <lightning:button label="Save" variant="brand" iconName="utility:save" iconPosition="right" onclick="{!c.handleSubmit}"/>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-p-around_small">
+                <c:DynamicDatatable hideCheckboxColumn="false"
+                                    pageSize="5"
+                                    sObjectName="Account"
+                                    keyField="Id"
+                                    fieldsToQuery="['Name']"
+                                    fieldsMetadata="{!v.fieldsMetadata}" selectedRows="{!v.accountToCreateOpps}" data="{!v.allAccounts}" />
+            </div>
+        </div>
+    </lightning:card>
+    
+</aura:component>

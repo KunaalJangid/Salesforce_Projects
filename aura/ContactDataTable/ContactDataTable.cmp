@@ -1,0 +1,89 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId" access="global" controller="RetreiveContacts">
+    <aura:attribute name="data" type="Object"/>
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="recordId" type="String" default=""/>
+    
+    <!--For Pagination-->
+    <aura:attribute name="allData" type="List"/>
+    <aura:attribute name="currentPageNumber" type="Integer" default="1"/>
+    <aura:attribute name="pageSize" type="Integer" default="5"/>
+    <aura:attribute name="totalPages" type="Integer" default="0"/>
+    <aura:attribute name="pageList" type="List" /> 
+    <aura:attribute name="searchTerm" type="String" default=""/>
+    <aura:attribute name="cuurentPageDataSize" type="Integer" />
+    <aura:attribute name="datasize" type="Integer" />
+    
+    
+    <!--For Sorting of data-->
+    <aura:attribute name="sortDirection" type="String" default="asc" />
+    <aura:attribute name="defaultSortDirection" type="String" default="asc" />
+    <aura:attribute name="sortedBy" type="String" />
+    
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    
+    <lightning:card title="Contacts" iconName="standard:contact_list">
+        
+        <aura:set attribute="actions">
+            <lightning:input aura:id="enter-search"
+                             name="enter-search"
+                             label="Search Contacts"
+                             type="search" value="{!v.searchTerm}" onchange="{!c.handleKeyUp }" />
+        </aura:set>
+        <lightning:layout multipleRows="true" horizontalAlign="center">
+            <lightning:layoutItem padding="around-small" size="12">
+                <lightning:datatable
+                                     aura:id="accountDataTable"
+                                     columns="{! v.columns }"
+                                     data="{! v.data }"
+                                     keyField="Id"
+                                     hideCheckboxColumn="true"
+                                     defaultSortDirection="{!v.defaultSortDirection}"
+                                     sortedDirection="{!v.sortDirection}"
+                                     sortedBy="{!v.sortedBy}"
+                                     onsort="{!c.handleSort}"/>
+                
+            </lightning:layoutItem>
+        </lightning:layout>
+        <lightning:layout>
+                <lightning:layoutItem padding="horizontal-medium" size="4" alignmentBump="right">
+
+                        Showing records from {! ((v.currentPageNumber-1)*v.pageSize)+' to '+((v.currentPageNumber-1)*v.pageSize+v.cuurentPageDataSize)} out of {!v.datasize}
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="horizontal-medium" flexibility="auto" size="4" >
+                    <lightning:button label="First" iconName="utility:left" iconPosition="left"
+                                      onclick="{!c.onFirst}" disabled="{! v.currentPageNumber == 1}"/>
+                    <lightning:button iconName="utility:chevronleft" iconPosition="left"
+                                      onclick="{!c.onPrev}" disabled="{! v.currentPageNumber == 1}"/>
+                    <!-- <span class="slds-p-horizontal_x-small">
+                    <a onclick="{!c.processMe}" name="1" 
+                       class="{! (v.currentPageNumber == 1) ? 'selected' : ''}">1</a>
+                </span>
+                <span class="slds-p-horizontal_xxx-small">
+                    <a>...</a>
+                </span>
+                
+                <aura:iteration items="{!v.pageList}" var="item">
+                    <span class="slds-p-horizontal_x-small">
+                        <a onclick="{!c.processMe}" name="{!item}"
+                           class="{! (v.currentPageNumber == item) ? 'selected' : ''}">{!item}</a>
+                    </span>
+                </aura:iteration>
+                <span class="slds-p-horizontal_xxx-small">
+                    <a>...</a>
+                </span>
+                <span class="slds-p-horizontal_x-small">
+                    <a onclick="{!c.processMe}" name="{!v.totalPages}"
+                       class="{! (v.currentPageNumber == v.totalPages) ? 'selected' : ''}">{!v.totalPages}</a>
+                </span> -->
+                    <lightning:button iconName="utility:chevronright" iconPosition="right" 
+                                      disabled="{! v.currentPageNumber == v.totalPages}" onclick="{!c.onNext}"/>
+                    <lightning:button label="Last" iconName="utility:right" iconPosition="right" 
+                                      disabled="{! v.currentPageNumber == v.totalPages}" onclick="{!c.onLast}"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem alignmentBump="right" padding="horizontal-medium" size="4">
+
+                </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+    
+</aura:component>

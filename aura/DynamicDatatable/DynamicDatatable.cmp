@@ -1,0 +1,77 @@
+<aura:component controller="LightningComponentController">
+    <aura:attribute name="sObjectName" type="String" />
+    <aura:attribute name="fieldsToQuery" type="List" />
+    <aura:attribute name="fieldsMetadata" type="List" />
+    <aura:attribute name="selectedRecords" type="List" default="[]" access="PRIVATE" />
+    <aura:attribute name="selectedRows" type="List" default="[]" />
+    <aura:attribute name="keyField" type="String" default="Id" />
+    <aura:attribute name="data" type="List" default="[]" />
+    <aura:attribute name="filteredRecords" type="List" default="[]" />
+    <aura:attribute name="pageSize" type="Integer" default="10" />
+    <aura:attribute name="totalPages" type="List" default="[]" />
+    <aura:attribute name="currentPage" type="Integer" default="1" />
+    <aura:attribute name="hideCheckboxColumn" type="Boolean" default="true" />
+    
+    <aura:attribute name="hasPageChanged" type="Boolean" />
+    <!-- attribute to check if it is initialLoad -->
+    <aura:attribute name="initialLoad" type="Boolean" default="true"/>
+    
+    
+    
+    <!--For Sorting of data-->
+    <aura:attribute name="sortDirection" type="String" default="asc" />
+    <aura:attribute name="defaultSortDirection" type="String" default="asc" />
+    <aura:attribute name="sortedBy" type="String" />
+    
+    <!--For Spinner on Async Call to apex -->
+    <aura:attribute name="isProcessing" type="Boolean" access="PRIVATE" default="false" />
+    
+    <aura:handler name="init" action="{!c.init}" value="{!this}" />
+    
+    <aura:if isTrue="{!v.isProcessing }">
+        <lightning:spinner alternativeText="Loading" />
+    </aura:if>
+    
+    <lightning:card footer="Card Footer" title="Hello">
+        <aura:set attribute="actions">
+            <lightning:select name="select" label="Page" value="{!v.currentPage}" onchange="{!c.onPageChange}">
+                <aura:iteration items="{!v.totalPages}" var="page">
+                    <option text="{!page}" value="{!page}"></option>
+                </aura:iteration>
+            </lightning:select>
+        </aura:set>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12 slds-col slds-size_1-of-1 slds-large-size_12-of-12 slds-p-top_small slds-p-right_small slds-p-left_small">
+                <lightning:datatable
+                                     aura:id="dynamicDataTable"
+                                     columns="{!v.fieldsMetadata}"
+                                     data="{!v.filteredRecords}"
+                                     keyField="{!v.keyField}"
+                                     hideCheckboxColumn="{!v.hideCheckboxColumn}"
+                                     defaultSortDirection="{!v.defaultSortDirection}"
+                                     sortedDirection="{!v.sortDirection}"
+                                     sortedBy="{!v.sortedBy}"
+                                     onsort="{!c.handleSort}" 
+                                     onrowselection="{!c.onRowSelection}" 
+                                     selectedRows="{!v.selectedRecords}"/>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12 slds-align_absolute-center slds-p-around_small">
+                        <h1 class="slds-badge">
+                            Showing {!((v.currentPage * v.pageSize) - v.pageSize) + 1} - {!((v.currentPage * v.pageSize) - v.pageSize) + v.filteredRecords.length} of {!v.data.length} records...
+                        </h1>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12 slds-align_absolute-center">
+                        <lightning:buttonGroup>
+                            <lightning:button label="First" disabled="{!v.currentPage == 1}" variant="brand-outline" iconName="utility:left" iconPosition="left" onclick="{!c.onFirst}"/>
+                            <lightning:button label="Prev" disabled="{!v.currentPage == 1}" variant="brand-outline" iconName="utility:chevronleft" iconPosition="left" onclick="{!c.onPrev}"/>
+                            <lightning:button label="Next" disabled="{!(v.totalPages.length > 0 ? v.currentPage :0) == v.totalPages.length ? true : false}" variant="brand-outline" iconName="utility:chevronright" iconPosition="right" onclick="{!c.onNext}"/>
+                            <lightning:button label="Last" disabled="{!(v.totalPages.length > 0 ? v.currentPage :0) == v.totalPages.length ? true : false}" variant="brand-outline" iconName="utility:right" iconPosition="right" onclick="{!c.onLast}"/>
+                        </lightning:buttonGroup>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </lightning:card>
+</aura:component>

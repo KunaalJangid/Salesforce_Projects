@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SalesforceProjects</fullName>
+    <types>
+        <members>BitCoinAPIController</members>
+        <members>BitcoinRevenue</members>
+        <members>BitcoinToUSDConvertor</members>
+        <members>BitcoinToUSDConvertorTest</members>
+        <members>DatabaseResult</members>
+        <members>LightningComponentController</members>
+        <members>RetreiveContacts</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>BitcoinConverter</members>
+        <members>ContactDataTable</members>
+        <members>CreateOppsForAccounts</members>
+        <members>DynamicDatatable</members>
+        <name>AuraDefinitionBundle</name>
+    </types>
+    <types>
+        <members>Account.Annual_Revenue_in_Bitcoin__c</members>
+        <name>CustomField</name>
+    </types>
+    <version>48.0</version>
+</Package>

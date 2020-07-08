@@ -1,0 +1,36 @@
+<aura:component implements="force:appHostable" controller="BitCoinAPIController">
+    <aura:attribute name="options" type="List" access="PRIVATE" default ="[]"/>
+    <aura:attribute name="selectedValue" type="String" default="US Dollar" access="PRIVATE"/>
+    <aura:attribute name="bitcoinAmount" type="decimal" access="PRIVATE" default="0" />
+    <aura:attribute name="bitcoinConvertedAmount" type="decimal" access="PRIVATE" default="0"  />
+    <aura:attribute name="isProcessing" type="Boolean" access="PRIVATE" default="false" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    
+    <aura:if isTrue="{!v.isProcessing }">
+        <lightning:spinner alternativeText="Loading" />
+    </aura:if>
+    
+    
+    <lightning:card>
+        <aura:set attribute="actions">
+            <lightning:select name="selectedCurrency" label="Currency" aura:id="selectedCurrency" value="{!v.selectedValue}" onchange="{! c.onCurrenyChange }" >
+                <aura:iteration items="{!v.options}" var="option">
+                    <option text="{!option.name}" value="{!option.name}" />
+                </aura:iteration>
+            </lightning:select>
+        </aura:set>
+        <aura:set attribute="title">
+            Bitcoin Converter &nbsp;
+            <lightning:icon iconName="custom:custom14" />
+        </aura:set>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12 slds-p-around_small">
+                <lightning:input type="number" name="bitcoinAmount" label="Bitcoin Amount" value="{!v.bitcoinAmount}" formatter="currency" step="0.01" onchange="{!c.onBitcoinAmountChange}"/>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12 slds-p-around_small">
+                <lightning:input type="number" name="bitcoinAmount" label="{!v.selectedValue + ' Amount'}" value="{!v.bitcoinConvertedAmount}" formatter="currency" step="0.01" onchange="{!c.onConvertedAmountChange}"/>
+            </div>
+        </div>
+    </lightning:card>
+</aura:component>
